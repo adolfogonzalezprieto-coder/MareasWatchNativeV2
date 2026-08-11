@@ -1,0 +1,25 @@
+name: Generar APK Wear OS nativa V2
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.13"
+      - name: Compilar APK V2
+        run: gradle :app:assembleDebug --stacktrace
+      - name: Subir APK V2
+        uses: actions/upload-artifact@v4
+        with:
+          name: MareasWatchNativeV2-APK
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
